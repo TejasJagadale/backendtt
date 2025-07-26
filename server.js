@@ -12,7 +12,7 @@ const app = express();
 connectDB();
 
 const allowedOrigins = [
-  "http://localhost:3000", "https://ttcontentpost.vercel.app"
+  "http://localhost:3000", "https://ttcontentpost.vercel.app", "https://todaytalks.vercel.app"
 ];
 
 const corsOptions = {
