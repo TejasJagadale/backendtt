@@ -11,7 +11,9 @@ const app = express();
 // Connect to database first
 connectDB();
 
-const allowedOrigins = ["http://localhost:3000", "https://your-production-frontend.com"];
+const allowedOrigins = [
+  "http://localhost:3000"
+];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -21,10 +23,13 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true,
+  credentials: true
 };
 
 app.use(cors(corsOptions));
+
+// SIMPLIFIED CORS - use this instead of complex config
+// app.use(cors());
 
 // Middleware
 app.use(express.json());
