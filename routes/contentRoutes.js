@@ -149,4 +149,62 @@ router.delete("/:category/:id", async (req, res) => {
   }
 });
 
+// Toggle Status
+router.patch("/toggle-status/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    let updatedContent;
+
+    // Search through all categories to find the content
+    for (const category of categories) {
+      const Content = createContentModel(category);
+      updatedContent = await Content.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true }
+      );
+      if (updatedContent) break;
+    }
+
+    if (!updatedContent) {
+      return res.status(404).json({ message: "Content not found" });
+    }
+
+    res.json(updatedContent);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Toggle Trending
+router.patch("/toggle-trending/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { trending } = req.body;
+
+    let updatedContent;
+
+    // Search through all categories to find the content
+    for (const category of categories) {
+      const Content = createContentModel(category);
+      updatedContent = await Content.findByIdAndUpdate(
+        id,
+        { trending },
+        { new: true }
+      );
+      if (updatedContent) break;
+    }
+
+    if (!updatedContent) {
+      return res.status(404).json({ message: "Content not found" });
+    }
+
+    res.json(updatedContent);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 module.exports = router;
