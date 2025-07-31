@@ -11,7 +11,9 @@ const categories = [
   "Health",
   "Entertainment",
   "Sports",
-  "Education"
+  "Education",
+  "Stories",
+  "Information"
 ];
 
 // Create new content
