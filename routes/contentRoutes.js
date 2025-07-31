@@ -13,7 +13,8 @@ const categories = [
   "Sports",
   "Education",
   "Stories",
-  "Information"
+  "Information",
+  "Updates"
 ];
 
 // Create new content
