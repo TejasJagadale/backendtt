@@ -12,7 +12,7 @@ const BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
 exports.getUploadUrl = async (fileType) => {
   const extension = fileType.split("/")[1]; // Get file extension
-  const key = `uploads/${Date.now()}-${Math.random()
+  const key = `${Date.now()}-${Math.random()
     .toString(36)
     .substring(2, 8)}.${extension}`;
 
