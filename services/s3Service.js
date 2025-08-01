@@ -13,38 +13,35 @@ const s3 = new AWS.S3({
 });
 
 exports.getUploadUrl = async (fileType) => {
+  const extension = fileType.split("/")[1]; // Get file extension
+  console.log(extension, "EXTENSION");
+  
+  const key = `uploads/${Date.now()}-${Math.random()
+    .toString(36)
+    .substring(2, 8)}.${extension}`;
+
+  const params = {
+    Bucket: BUCKET_NAME,
+    Key: key,
+    ContentType: fileType,
+    Expires: 60 * 5, // 5 minutes
+    ACL: "public-read" // Make uploaded files publicly accessible
+  };
+
+  console.log(params);
+
   try {
-    if (!fileType) throw new Error('File type is required');
-    
-    const extension = fileType.split('/')[1] || 'bin';
-    const key = `uploads/${Date.now()}-${Math.random()
-      .toString(36)
-      .substring(2, 8)}.${extension}`;
+    const uploadUrl = await s3.getSignedUrlPromise("putObject", params);
+    console.log(uploadUrl);
 
-    const params = {
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: key,
-      ContentType: fileType,
-      Expires: 60 * 5, // 5 minutes
-      ACL: 'public-read'
+    return {
+      uploadUrl,
+      key,
+      publicUrl: `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
     };
-
-    const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
-    
-    // Construct public URL - use virtual hosted-style URL
-    const publicUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-
-    return { uploadUrl, key, publicUrl };
-    
   } catch (error) {
-    console.error('S3 Error Details:', {
-      message: error.message,
-      stack: error.stack,
-      code: error.code,
-      region: process.env.AWS_REGION,
-      bucket: process.env.S3_BUCKET_NAME
-    });
-    throw new Error(`Failed to generate upload URL: ${error.message}`);
+    console.error("Error generating S3 URL:", error);
+    throw error;
   }
 };
 
